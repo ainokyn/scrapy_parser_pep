@@ -11,7 +11,7 @@ class PepSpider(scrapy.Spider):
     def parse(self, response):
         all_documents = response.css('a[href^="pep"]')
         for document_link in all_documents:
-           yield response.follow(document_link, callback=self.parse_pep)
+            yield response.follow(document_link, callback=self.parse_pep)
 
     def parse_pep(self, response):
         response_title = response.css('h1.page-title::text').get()
