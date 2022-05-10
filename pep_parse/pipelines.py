@@ -6,9 +6,11 @@
 
 # useful for handling different item types with a single interface
 import csv
-from pathlib import Path
 import datetime as dt
 from collections import Counter
+from pathlib import Path
+
+BASE_DIR = Path.cwd()
 
 
 class PepParsePipeline:
@@ -16,9 +18,9 @@ class PepParsePipeline:
         self.list_status = []
 
     def open_spider(self, spider):
-        results_dir = Path.cwd() / 'results'
+        results_dir = BASE_DIR / 'results'
         now = dt.datetime.now()
-        now_formatted = now.strftime('%Y-%m-%d_%H-%M-%S')
+        now_formatted = now.strftime('%Y-%m-%d-%H-%M-%S')
         file_name = f'status_summary_{now_formatted}.csv'
         file_path = results_dir / file_name
         self.csvwriter = csv.writer(open(file_path, 'w', encoding='UTF-8'))
