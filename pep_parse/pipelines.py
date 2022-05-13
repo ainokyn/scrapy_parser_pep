@@ -19,11 +19,13 @@ class PepParsePipeline:
 
     def open_spider(self, spider):
         results_dir = BASE_DIR / 'results'
+        results_dir.mkdir(exist_ok=True)
         now = dt.datetime.now()
         now_formatted = now.strftime('%Y-%m-%d-%H-%M-%S')
         file_name = f'status_summary_{now_formatted}.csv'
         file_path = results_dir / file_name
-        self.csvwriter = csv.writer(open(file_path, 'w', encoding='UTF-8'))
+        self.file = open(file_path, 'w', encoding='UTF-8', newline='')
+        self.csvwriter = csv.writer(self.file)
         self.csvwriter.writerow(['Статус', 'Количество'])
 
     def process_item(self, item, spider):
@@ -38,4 +40,4 @@ class PepParsePipeline:
         for stat, amount in list(zip(st, am)):
             self.csvwriter.writerow([stat, amount])
         self.csvwriter.writerow(['Total', total])
-        self.csvwriter.close()
+        self.file.close()

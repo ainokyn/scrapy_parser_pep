@@ -18,7 +18,7 @@ class PepSpider(scrapy.Spider):
         split_title = response_title.split()
         data = {
             'number': int(split_title[1]),
-            'name': (' '.join(split_title[3:])).strip(),
+            'name': response_title,
             'status': response.css('dt:contains("Status") + dd::text').get(),
         }
         yield PepParseItem(data)
