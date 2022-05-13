@@ -1,16 +1,12 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
 import csv
 import datetime as dt
 from collections import Counter
 from pathlib import Path
 
+from scrapy.exceptions import DropItem
+
 BASE_DIR = Path.cwd()
+heading = ['Статус', 'Количество']
 
 
 class PepParsePipeline:
@@ -26,10 +22,13 @@ class PepParsePipeline:
         file_path = results_dir / file_name
         self.file = open(file_path, 'w', encoding='UTF-8', newline='')
         self.csvwriter = csv.writer(self.file)
-        self.csvwriter.writerow(['Статус', 'Количество'])
+        self.csvwriter.writerow(heading)
 
     def process_item(self, item, spider):
-        self.list_status.append(item["status"])
+        if "status" not in item:
+            raise DropItem('Ключ status отсутствует в словаре item.')
+        else:
+            self.list_status.append(item["status"])
         return item
 
     def close_spider(self, spider):
